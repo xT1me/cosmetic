@@ -45,6 +45,10 @@ const App = () => {
     });
   };
 
+  const handleRemoveItem = (index) => {
+    setCartItems((prevItems) => prevItems.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="App">
       <Header 
@@ -55,6 +59,7 @@ const App = () => {
         setUserId={setUserId}
         cartItems={cartItems}
         userId={userId}
+        handleRemoveItem={handleRemoveItem}
       />
       <Main onAddToCart={handleAddToCart} username={username} />
       <Footer />

@@ -8,7 +8,6 @@ const AddProduct = ({category, onClose, onConfirm, username}) => {
   const fields = [
     { name: 'name', label: 'Product Name', type: 'text', required: true },
     { name: 'price', label: 'Price', type: 'number', required: true },
-    { name: 'quantity', label: 'Quantity', type: 'number', required: true },
     { name: 'image', label: 'Product Image', type: 'file', required: true },
   ];
 

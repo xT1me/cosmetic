@@ -37,6 +37,7 @@
     "react-file-input-custom": "^1.0.7",
     "react-hook-form": "^7.54.0",
     "react-image-input": "^0.1.0",
+    "react-image-lightbox": "^5.1.4",
     "react-map-gl": "^7.1.7",
     "react-notifications": "^1.7.4",
     "react-redux": "^8.1.0",

@@ -4,21 +4,27 @@ import AuthForm from "../AuthForm/AuthForm.jsx";
 import Cart from "../Cart/Cart.jsx";
 import { logout } from "../../api/auth/auth.js";
 
-const Header = ({ isAuth, setAuth, username, setUsername, setUserId, cartItems, userId }) => {
+const Header = ({
+  isAuth,
+  setAuth,
+  username,
+  setUsername,
+  setUserId,
+  cartItems,
+  userId,
+  handleRemoveItem,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAuthOpened, setIsAuthOpened] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
   const closeModal = () => {
-    setIsModalOpen(false)
-    setModalContent(null)
-  }
+    setIsModalOpen(false);
+  };
 
   const openCart = () => {
-    setModalContent(<Cart cartItems={cartItems} toggleAuthModal={toggleAuthModal} isAuth={isAuth} userId={userId} close={closeModal} />);
     toggleModal();
   };
 
@@ -35,7 +41,7 @@ const Header = ({ isAuth, setAuth, username, setUsername, setUserId, cartItems, 
     setAuth(true);
     toggleAuthModal();
     setUsername(username);
-    setUserId(id)
+    setUserId(id);
   };
 
   const getTotalItemCount = () => {
@@ -74,7 +80,20 @@ const Header = ({ isAuth, setAuth, username, setUsername, setUserId, cartItems, 
           )}
         </div>
 
-        {isModalOpen && <Modal onClose={toggleModal}>{modalContent}</Modal>}
+        {isModalOpen && (
+          <Modal onClose={toggleModal}>
+            {" "}
+            <Cart
+              key={JSON.stringify(cartItems)}
+              handleRemoveItem={handleRemoveItem}
+              cartItems={cartItems}
+              toggleAuthModal={toggleAuthModal}
+              isAuth={isAuth}
+              userId={userId}
+              close={closeModal}
+            />
+          </Modal>
+        )}
       </div>
     </header>
   );
@@ -110,6 +129,7 @@ const headerStyles = {
     color: "#f9a825",
     transition: "color 0.3s ease",
     cursor: "pointer",
+    marginRight: "auto",
   },
   icons: {
     display: "flex",

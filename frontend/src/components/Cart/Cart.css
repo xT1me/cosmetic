@@ -68,6 +68,12 @@
   margin-top: 15px;
 }
 
+.cart-item-remove {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
 .cart-close-button {
   display: block;
   margin: 20px auto 0;

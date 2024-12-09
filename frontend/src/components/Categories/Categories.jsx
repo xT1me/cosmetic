@@ -18,7 +18,6 @@ const ItemList = ({ items, noItemsMessage, onSelect, isCartItem, onAddToCart, us
       isCartItem={isCartItem}
       image={item.photo}
       price={item.price}
-      quantity={item.quantity}
       id={item._id}
       title={item.name}
       onSelect={onSelect}
