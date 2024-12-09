@@ -22,11 +22,18 @@ const App = () => {
         setUserId(userData.id)
         setAuth(true)
       } else {
-        logout()
+        logoutAccount()
       }
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const logoutAccount = () => {
+    logout()
+    setAuth(false)
+    setUsername(null)
+    setUserId(null)
   }
 
   useEffect(() => {
@@ -58,6 +65,7 @@ const App = () => {
         setUsername={setUsername}
         setUserId={setUserId}
         cartItems={cartItems}
+        logoutAccount={logoutAccount}
         userId={userId}
         handleRemoveItem={handleRemoveItem}
       />

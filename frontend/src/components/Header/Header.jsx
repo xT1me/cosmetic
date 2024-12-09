@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Modal from "../../ui/Modal/Modal.jsx";
 import AuthForm from "../AuthForm/AuthForm.jsx";
 import Cart from "../Cart/Cart.jsx";
-import { logout } from "../../api/auth/auth.js";
 
 const Header = ({
   isAuth,
@@ -13,6 +12,7 @@ const Header = ({
   cartItems,
   userId,
   handleRemoveItem,
+  logoutAccount
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAuthOpened, setIsAuthOpened] = useState(false);
@@ -30,11 +30,6 @@ const Header = ({
 
   const toggleAuthModal = () => {
     setIsAuthOpened(!isAuthOpened);
-  };
-
-  const logoutAccount = () => {
-    logout();
-    setAuth(false);
   };
 
   const onAuthSuccess = (username, id) => {
