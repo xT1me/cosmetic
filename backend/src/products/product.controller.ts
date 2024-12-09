@@ -20,16 +20,15 @@ export class ProductController {
     }),
   )
   async createProduct(
-    @Body() createProductDto: { name: string; description: string; price: number; quantity: number; category: string },
+    @Body() createProductDto: { name: string; description: string; price: number; category: string },
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const { name, price, quantity, category } = createProductDto;
+    const { name, price, category } = createProductDto;
 
     const imageUrl = file ? `/uploads/products/${file.filename}` : null;
 
     const newProduct = await this.productsService.createProduct({
       name,
-      quantity,
       price,
       category,
       photo: imageUrl,

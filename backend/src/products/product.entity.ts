@@ -7,9 +7,6 @@ export class Product extends Document {
   name: string;
 
   @Prop({ required: true })
-  quantity: number;
-
-  @Prop({ required: true })
   price: number;
 
   @Prop()

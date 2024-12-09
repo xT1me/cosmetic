@@ -7,12 +7,11 @@ import { Product } from './product.entity';
 export class ProductsService {
   constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) {}
 
-  async createProduct(createProductDto: { name: string; quantity: number; price: number; category: string; photo: string }) {
-    const { name, quantity, price, category, photo } = createProductDto;
+  async createProduct(createProductDto: { name: string; price: number; category: string; photo: string }) {
+    const { name, price, category, photo } = createProductDto;
 
     const newProduct = new this.productModel({
       name,
-      quantity,
       price,
       category,
       photo,
