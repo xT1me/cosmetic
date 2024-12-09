@@ -1,0 +1,70 @@
+.main-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 30px;
+  flex-wrap: wrap;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.button-back {
+  border: none;
+  background: none;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  cursor: pointer;
+}
+
+/* Styles for empty states */
+.no-items-message {
+  font-size: 18px;
+  color: #888;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+.category-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+.categories-wrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
