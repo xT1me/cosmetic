@@ -1,29 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UsersService } from 'src/users/user.service';
-
-interface JwtPayload {
-  username: string;
-  sub: string;
-}
+import { Request } from 'express';
+import { AuthService } from '../auth.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private usersService: UsersService) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+  constructor(
+    private readonly authService: AuthService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: 'dL8oS1+WZ/pLvEYeMkmO4Z3HYQWhYZ88n2vqQfr2aFA=',
+      passReqToCallback: true,
     });
   }
 
-  async validate(payload: JwtPayload) {
-    const { username } = payload;
-    const user = await this.usersService.findByEmail(username);
-    if (!user) {
-      throw new Error('User not found');
+  async validate(req: Request, payload: any) {
+    const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    if (!accessToken) {
+      throw new UnauthorizedException('Access token not found');
     }
-    return user;
+
+    const isTokenValid = await this.authService.validateAccessToken(payload, accessToken);
+    if (!isTokenValid) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    return payload;
   }
 }

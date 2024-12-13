@@ -3,7 +3,10 @@ import api from "../api";
 export const createOrder = async (username, cartItems, total) => {
     const payload = {
         userId: username,
-        products: cartItems,
+        products: cartItems.map(item => ({
+            productId: item.id,
+            count: item.count,
+        })),
         totalPrice: total,
     };
 
@@ -13,9 +16,41 @@ export const createOrder = async (username, cartItems, total) => {
                 'Content-Type': 'application/json',
             },
         });
+        const { status, deliveryDate } = response.data;
+
         return response.data;
     } catch (error) {
-        console.error('Error creating product:', error);
+        console.error('Error creating order:', error);
+        throw error;
+    }
+};
+
+export const getAllOrders = async () => {
+    try {
+        const response = await api.get('/orders');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching all orders:', error);
+        throw error;
+    }
+};
+
+export const getOrdersByUserCompleted = async (userId) => {
+    try {
+        const response = await api.get(`/orders/user/${userId}/completed`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching completed orders for user:', error);
+        throw error;
+    }
+};
+
+export const getOrdersByUserInTransit = async (userId) => {
+    try {
+        const response = await api.get(`/orders/user/${userId}/in-transit`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching in-transit orders for user:', error);
         throw error;
     }
 };

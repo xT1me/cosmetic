@@ -1,53 +1,65 @@
-import {
-  Injectable,
-  ConflictException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/user.service';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { UsersService } from "src/users/user.service";
+import { User } from "src/users/schemas/user.schema";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) {}
 
-  async register(username: string, email: string, password: string) {
-    const existingUser = await this.usersService.findByEmail(username);
-    if (existingUser) {
-      throw new ConflictException('Username already exists');
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.usersService.findByUsername(username);
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const { password, ...result } = user;
+      return result;
     }
+    return null;
+  }
+
+  async validateAccessToken(payload: any, token: string): Promise<boolean> {
+    return true;
+  }
+
+  async login(user: any) {
+    const payload = { userId: user._id, roles: user.roles };
+    
+    const accessToken = this.jwtService.sign(payload, {
+      secret: 'dL8oS1+WZ/pLvEYeMkmO4Z3HYQWhYZ88n2vqQfr2aFA=',
+      expiresIn: '1h',
+    });
   
-    return this.usersService.createUser(username, email, password);
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: 'dL8oS1+WZ/pLvEYeMkmO4Z3HYQWhYZ88n2vqQfr2aFA=',
+      expiresIn: '7d',
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
   
-  async login(email: string, password: string) {
-    const user = await this.usersService.findByEmail(email);
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid username or password');
-    }
-  
-    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid username or password');
+  async validateRefreshToken(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken);
+      const user = await this.usersService.findOneById(payload.sub);
+      return user;
+    } catch (e) {
+      throw new UnauthorizedException("Invalid refresh token");
     }
-  
-    const payload = { username: user.username, sub: user._id };
-    const token = this.jwtService.sign(payload);
-  
-    return { token, username: user.username, id: user._id };
   }
-  
 
-  async validateUser(username: string): Promise<any> {
-    const user = await this.usersService.findByEmail(username);
-    if (!user) {
-      return null;
-    }
-    return { username: user.username, userId: user._id };
+  async register(registerData: { email: string; username: string; password: string }) {
+    return this.usersService.createUser(
+      registerData.username,
+      registerData.email,
+      registerData.password
+    );
   }
 }

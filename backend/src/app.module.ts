@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/user.module';
+import { DefaultDataService } from './default-data/default-data.service';
 
 
 
@@ -25,5 +26,6 @@ import { UsersModule } from './users/user.module';
     ProductsModule,
     OrdersModule,
   ],
+  providers: [DefaultDataService]
 })
 export class AppModule {}

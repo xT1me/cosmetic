@@ -32,7 +32,7 @@ var ProductInfo = /** @class */ (function () {
         mongoose_1.Prop({ type: Number, required: true })
     ], ProductInfo.prototype, "count");
     ProductInfo = __decorate([
-        mongoose_1.Schema() // Explicitly define ProductInfo as a schema
+        mongoose_1.Schema()
     ], ProductInfo);
     return ProductInfo;
 }());

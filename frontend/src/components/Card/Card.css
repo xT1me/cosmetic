@@ -20,8 +20,8 @@
   
   .card-title {
     font-size: 18px;
-    padding: 10px;
-    height: 50px;
+    padding: unset;
+    margin: 0;
   }
   
   .card-button {

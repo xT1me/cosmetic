@@ -3,73 +3,35 @@ import './App.css';
 import Header from './components/Header/Header.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import Main from './components/Main/Main.jsx';
-import { checkAuth, logout, register } from './api/auth/auth.js';
+import { checkAuth } from './api/auth/auth.js';
 import useLocalStorage from './hooks/useLocalStorage.js';
+import { getUserById } from './api/users/users.js';
+import { userActions } from './components/redux/user/userActions.js';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const App = () => {
-  const [isAuth, setAuth] = useState(null)
-  const [username, setUsername] = useState(null)
-  const [userId, setUserId] = useState(null)
-  const [cartItems, setCartItems] = useLocalStorage('cartItems', [])
+  const dispatch = useDispatch()
+  const userReducer = new userActions(dispatch)
+
+  useEffect(async () => {
+    checkIsAuth()
+  }, []);
 
   const checkIsAuth = async () => {
     try {
-      const userData = await checkAuth()
-
-      if (userData) {
-        setUsername(userData.username)
-        setUserId(userData.id)
-        setAuth(true)
-      } else {
-        logoutAccount()
-      }
+      const authData = await checkAuth()
+      authData ? userReducer.setUser(authData.userId) : userReducer.logoutAccount()
     } catch (error) {
       console.error(error)
     }
   }
 
-  const logoutAccount = () => {
-    logout()
-    setAuth(false)
-    setUsername(null)
-    setUserId(null)
-  }
-
-  useEffect(() => {
-    checkIsAuth()
-  }, [])
-
-  const handleAddToCart = (item) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      if (existingItem) {
-        return prevItems.map((i) =>
-          i.id === item.id ? { ...i, count: i.count + item.count } : i
-        );
-      }
-      return [...prevItems, item];
-    });
-  };
-
-  const handleRemoveItem = (index) => {
-    setCartItems((prevItems) => prevItems.filter((_, i) => i !== index));
-  };
 
   return (
     <div className="App">
-      <Header 
-        isAuth={isAuth} 
-        setAuth={setAuth} 
-        username={username} 
-        setUsername={setUsername}
-        setUserId={setUserId}
-        cartItems={cartItems}
-        logoutAccount={logoutAccount}
-        userId={userId}
-        handleRemoveItem={handleRemoveItem}
-      />
-      <Main onAddToCart={handleAddToCart} username={username} />
+      <Header />
+      <Main />
       <Footer />
     </div>
   );

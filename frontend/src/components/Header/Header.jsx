@@ -1,164 +1,86 @@
 import React, { useState } from "react";
-import Modal from "../../ui/Modal/Modal.jsx";
-import AuthForm from "../AuthForm/AuthForm.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Badge,
+  Typography,
+  Modal,
+  Box,
+} from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Auth from "../Auth/Auth.jsx";
 import Cart from "../Cart/Cart.jsx";
 
-const Header = ({
-  isAuth,
-  setAuth,
-  username,
-  setUsername,
-  setUserId,
-  cartItems,
-  userId,
-  handleRemoveItem,
-  logoutAccount
-}) => {
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const user = useSelector((state) => state.user.user);
+  const cartItems = useSelector(state => state.cart.cartItems)
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAuthOpened, setIsAuthOpened] = useState(false);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const closeModal = () => setIsModalOpen(false);
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const openCart = () => {
-    toggleModal();
-  };
-
-  const toggleAuthModal = () => {
-    setIsAuthOpened(!isAuthOpened);
-  };
-
-  const onAuthSuccess = (username, id) => {
-    setAuth(true);
-    toggleAuthModal();
-    setUsername(username);
-    setUserId(id);
-  };
-
-  const getTotalItemCount = () => {
-    return cartItems.reduce((total, item) => total + item.count, 0);
-  };
+  const getTotalItemCount = () =>
+    cartItems.reduce((total, item) => total + item.count, 0);
 
   return (
-    <header style={headerStyles.header}>
-      {isAuthOpened && (
-        <AuthForm onClose={toggleAuthModal} onAuthSuccess={onAuthSuccess} />
-      )}
-      <div style={headerStyles.logo}>KISS&LOVE</div>
-      <div style={headerStyles.icons}>
-        <button style={headerStyles.cart} onClick={openCart}>
-          <img src="assets/images/shopping-cart.png" alt="cart" height={25} />
-          <div style={headerStyles.cartBadge}>{getTotalItemCount()}</div>
-        </button>
-        <div style={headerStyles.user}>
-          {isAuth && (
-            <h3
-              style={{
-                margin: 0,
-              }}
-            >
-              {username}
-            </h3>
-          )}
-          {isAuth ? (
-            <button onClick={logoutAccount} style={headerStyles.auth}>
-              <img src="assets/images/logout.png" alt="logout" height={25} />
-            </button>
-          ) : (
-            <button onClick={toggleAuthModal} style={headerStyles.auth}>
-              <img src="assets/images/user.png" alt="user" height={25} />
-            </button>
-          )}
-        </div>
+    <AppBar position="sticky" sx={{ backgroundColor: "#222" }}>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: "bold", color: "#f9a825", cursor: "pointer" }}
+        >
+          KISS&LOVE
+        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+          <IconButton sx={{ color: "icon.light" }} onClick={toggleModal}>
+            <Badge badgeContent={getTotalItemCount()} color="error">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
 
-        {isModalOpen && (
-          <Modal onClose={toggleModal}>
-            {" "}
-            <Cart
-              key={JSON.stringify(cartItems)}
-              handleRemoveItem={handleRemoveItem}
-              cartItems={cartItems}
-              toggleAuthModal={toggleAuthModal}
-              isAuth={isAuth}
-              userId={userId}
-              close={closeModal}
-            />
-          </Modal>
-        )}
-      </div>
-    </header>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {user && (
+              <Typography variant="body1" sx={{ color: "#fff", fontWeight: 900 }}>
+                {user.username}
+              </Typography>
+            )}
+
+            <Auth setIsOpen={setIsOpen} isOpen={isOpen} />
+          </Box>
+        </Box>
+      </Toolbar>
+
+      <Modal open={isModalOpen} onClose={closeModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            maxWidth: "80vw",
+            width: "100%",
+            backgroundColor: "white",
+            padding: 2,
+            borderRadius: 1,
+          }}
+        >
+          <Cart
+            toggleAuthModal={() => setIsOpen(true)}
+            close={closeModal}
+          />
+        </Box>
+      </Modal>
+    </AppBar>
   );
-};
-
-const headerStyles = {
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-    background: "#222",
-    color: "#fff",
-    position: "relative",
-    zIndex: 1000,
-  },
-  user: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 5,
-  },
-  auth: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    height: 25,
-  },
-  logo: {
-    fontSize: "28px",
-    fontWeight: "bold",
-    color: "#f9a825",
-    transition: "color 0.3s ease",
-    cursor: "pointer",
-    marginRight: "auto",
-  },
-  icons: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 30,
-    position: "relative",
-  },
-  cart: {
-    position: "relative",
-    background: "none",
-    border: "none",
-    color: "#fff",
-    fontSize: "24px",
-    cursor: "pointer",
-    transition: "color 0.3s ease",
-    height: 25,
-  },
-  cartBadge: {
-    position: "absolute",
-    top: -5,
-    right: -5,
-    background: "#f9a825",
-    borderRadius: "50%",
-    color: "#fff",
-    width: 20,
-    height: 20,
-    fontFamily: "sans-serif",
-    fontSize: "14px",
-    fontWeight: "bold",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
 };
 
 export default Header;

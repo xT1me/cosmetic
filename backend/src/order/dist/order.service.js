@@ -74,8 +74,8 @@ var OrdersService = /** @class */ (function () {
                         order = _a.sent();
                         return [4 /*yield*/, this.orderModel
                                 .findById(order._id)
-                                .populate('user') // Populate user
-                                .populate('products.productId') // Populate nested productId
+                                .populate('user')
+                                .populate('products.productId')
                                 .exec()];
                     case 2:
                         populatedOrder = _a.sent();

@@ -29,6 +29,7 @@ export const createProduct = async (productData) => {
     formData.append('quantity', productData.quantity);
     formData.append('category', productData.category);
     formData.append('image', productData.image);
+    formData.append('deliveryTime', productData.deliveryTime);
 
     try {
         const response = await api.post('/products', formData, {

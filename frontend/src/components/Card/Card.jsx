@@ -3,8 +3,23 @@ import "react-image-lightbox/style.css";
 import Lightbox from "react-image-lightbox";
 import "./Card.css";
 import { getCategoryImage } from "../../api/categories/categories";
+import { useDispatch, useSelector } from "react-redux";
+import { cartActions } from "../redux/cart/cartActions";
 
-const Card = ({ image, title, isCartItem, onSelect, id, price, onAddToCart }) => {
+const Card = ({
+  image,
+  title,
+  isCartItem,
+  onSelect,
+  id,
+  price,
+  deliveryTime,
+}) => {
+  const dispatch = useDispatch();
+  const cartReducer = new cartActions(dispatch);
+
+  const cartItems = useSelector(state => state.cart.cartItems)
+
   const [photo, setPhoto] = useState(null);
   const [count, setCount] = useState(1);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -33,7 +48,7 @@ const Card = ({ image, title, isCartItem, onSelect, id, price, onAddToCart }) =>
   };
 
   const handleAddToCart = () => {
-    onAddToCart({ id, title, price, count });
+    cartReducer.addItem(cartItems, { id, title, price, count, deliveryTime, photo: image })
   };
 
   const openProducts = () => {
@@ -63,6 +78,9 @@ const Card = ({ image, title, isCartItem, onSelect, id, price, onAddToCart }) =>
       )}
       <p className="card-title">{title}</p>
       {price && <h3>$ {price}</h3>}
+      {deliveryTime && (
+        <p className="card-title">Delivery time: ~ ${deliveryTime} days</p>
+      )}
       {isCartItem && (
         <div className="card-quantity">
           <button onClick={handleDecrease} className="quantity-button">

@@ -54,7 +54,6 @@ var OrdersController = /** @class */ (function () {
     OrdersController.prototype.createOrder = function (createOrderDto) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log(createOrderDto.products);
                 return [2 /*return*/, this.ordersService.createOrder(createOrderDto)];
             });
         });

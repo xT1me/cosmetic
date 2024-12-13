@@ -1,50 +1,42 @@
 import api from "../api";
 
-export const getToken = () => localStorage.getItem("token");
-
-const setToken = (token) => localStorage.setItem("token", token);
-
-const removeToken = () => localStorage.removeItem("token");
-
-export const register = async (email, username, password) => {
+export const register = async (username, email, password) => {
   try {
     const response = await api.post("/auth/register", { email, username, password });
     return response.data;
   } catch (error) {
     console.error("Error during registration:", error);
-    throw error;
+    throw error.response ? error.response.data : error.message;
   }
 };
 
-export const login = async (email, password) => {
+export const login = async (username, password) => {
   try {
-    const response = await api.post("/auth/login", { email, password });
-    const { token } = response.data;
+    const response = await api.post("/auth/login", { username, password });
 
-    setToken(token);
     return response.data;
   } catch (error) {
     console.error("Error during login:", error);
-    throw error;
+    throw error.response ? error.response.data : error.message;
   }
 };
 
 export const checkAuth = async () => {
   try {
-    const token = getToken();
-    if (!token) throw new Error("No token found");
-
-    const response = await api.get("/auth/check", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
+    const response = await api.get("/auth/check");
     return response.data;
   } catch (error) {
     console.error("Error during authentication check:", error);
-    throw error;
+    throw error.response ? error.response.data : error.message;
   }
 };
 
-export const logout = () => {
-  removeToken();
+export const logout = async () => {
+  try {
+    const response = await api.post("/auth/logout");
+    return response.data;
+  } catch (error) {
+    console.error("Error during logout:", error);
+    throw error.response ? error.response.data : error.message;
+  }
 };

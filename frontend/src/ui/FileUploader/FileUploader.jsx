@@ -16,7 +16,7 @@ const FileUpload = ({ uploadFiles }) => {
     <div className="file-upload-container">
       <div {...getRootProps()} className="dropzone">
         <input {...getInputProps()} />
-        <p>Перетащите файлы сюда или выберите с помощью кнопки.</p>
+        <p>Select file</p>
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 import React from "react";
 import Categories from "../Categories/Categories.jsx";
 
-const Main = ({onAddToCart, username}) => {
+const Main = () => {
     return (
         <div className="main-container">
-            <Categories onAddToCart={onAddToCart} username={username} />
+            <Categories />
         </div>
     )
 }

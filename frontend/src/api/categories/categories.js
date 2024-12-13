@@ -33,6 +33,7 @@ export const getCategoryImage = async (path) => {
         const response = await api.get(`/files/${path}`, {
             responseType: 'blob',
         });
+
         return URL.createObjectURL(response.data);
     } catch (error) {
         console.error('Error fetching file:', error);
