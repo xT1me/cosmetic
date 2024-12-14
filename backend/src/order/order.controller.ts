@@ -7,7 +7,7 @@ import { Roles } from 'src/utils/decorators/role.decorator';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) { }
 
   @Post()
   async createOrder(@Body() createOrderDto: CreateOrderDto) {
@@ -26,6 +26,14 @@ export class OrdersController {
   async getOrdersByUser(@Param('userId') userId: string) {
     return this.ordersService.getOrdersByUser(userId);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ROLE_ADMIN')
+  @Post(':orderId/status')
+  async updateOrderStatus(@Param('orderId') orderId: string, @Body('status') status: string) {
+    return this.ordersService.updateOrderStatus(orderId, status);
+  }
+
 
   @UseGuards(JwtAuthGuard)
   @Get('user/:userId/completed')

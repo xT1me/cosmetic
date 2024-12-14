@@ -54,3 +54,27 @@ export const getOrdersByUserInTransit = async (userId) => {
         throw error;
     }
 };
+
+export const updateOrderStatus = async (orderId, status) => {
+    try {
+        const response = await api.post(`/orders/${orderId}/status`, { status }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        throw error;
+    }
+};
+
+export const getOrderDetails = async (orderId) => {
+    try {
+        const response = await api.get(`/orders/${orderId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+        throw error;
+    }
+};

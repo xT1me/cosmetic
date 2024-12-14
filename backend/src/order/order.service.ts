@@ -48,6 +48,10 @@ export class OrdersService {
     return populatedOrder;
   }
 
+  async updateOrderStatus(orderId: string, status: string) {
+    return this.orderModel.findByIdAndUpdate(orderId, { status }, { new: true });
+  }  
+
   async getAllOrders() {
     return this.orderModel
       .find()

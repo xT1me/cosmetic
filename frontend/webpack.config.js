@@ -10,6 +10,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
+      publicPath: "/",
     }),
   ],
   module: {
@@ -52,6 +53,7 @@ module.exports = {
   },
   devServer: {
     port: 6001,
+    historyApiFallback: true,  
   },
   resolve: {
     fallback: {
